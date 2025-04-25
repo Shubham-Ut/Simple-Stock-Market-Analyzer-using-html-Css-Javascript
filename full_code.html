@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Stock Market Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            transition: background 0.5s ease;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: rgba(52, 73, 94, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
+            animation: fadeIn 1s ease-in-out;
+            transition: transform 0.3s;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #ecf0f1;
+            animation: slideIn 0.5s ease;
+            margin-bottom: 20px;
+        }
+        .stock-input {
+            margin-bottom: 20px;
+            border: 1px solid #bdc3c7;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: rgba(52, 73, 94, 0.8);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stock-input:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 255, 193, 0.5);
+        }
+        .stock-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ecf0f1;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 18px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            background: #34495e;
+            color: #ecf0f1;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #1abc9c;
+            box-shadow: 0 0 5px rgba(26, 188, 156, 0.5);
+            outline: none;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+        button:hover {
+            background-color: #16a085;
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(52, 73, 94, 0.8);
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease;
+        }
+        .chart {
+            margin-top: 20px;
+            background-color: rgba(44, 62, 80, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .bar {
+            height: 35px;
+            margin-bottom: 10px;
+            background-color: #1abc9c;
+            color: white;
+            text-align: right;
+            padding-right: 10px;
+            line-height: 35px;
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out, background-color 0.3s, transform 0.3s;
+        }
+        .bar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* New styles for graphics */
+        .graphic-icon {
+            width: 36px;
+            height: 36px;
+            fill: #ecf0f1;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <svg class="stock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M3 12h18"/>
+                <path d="M12 3v18"/>
+                <path d="M7 8l5 3 5-3"/>
+            </svg>
+            Enhanced Stock Market Analyzer
+        </h1>
+        <div id="stockNumberInput">
+            <label for="stockNumber">Number of Stocks:</label>
+            <input type="number" id="stockNumber" min="1" step="1" required>
+            <button onclick="generateStockInputs()">Generate Stock Inputs</button>
+        </div>
+        <div id="stockInputs" style="display: none;">
+            <!-- Stock inputs will be dynamically generated here -->
+        </div>
+        <div id="budgetInput" style="display: none;">
+            <label for="budget">
+                <svg class="stock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M16 8h-6a2 2 0 100 4h4a2 2 0 110 4H8"/>
+                    <path d="M12 6v2m0 8v2"/>
+                </svg>
+                Investment Budget ($):
+            </label>
+            <input type="number" id="budget" min="0" step="0.01" required>
+            <button onclick="optimizePortfolio()">Optimize Portfolio</button>
+        </div>
+        <div id="result"></div>
+        <div id="chart" class="chart"></div>
+    </div>
+
+    <script>
+        function generateStockInputs() {
+            const stockNumber = parseInt(document.getElementById('stockNumber').value);
+            if (isNaN(stockNumber) || stockNumber < 1) {
+                alert('Please enter a valid number of stocks (minimum 1).');
+                return;
+            }
+
+            const stockInputsDiv = document.getElementById('stockInputs');
+            stockInputsDiv.innerHTML = ''; // Clear previous inputs
+
+            for (let i = 1; i <= stockNumber; i++) {
+                const stockDiv = document.createElement('div');
+                stockDiv.className = 'stock-input';
+                stockDiv.innerHTML = `
+                    <h3>
+                        <svg class="stock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                        Stock ${i}
+                    </h3>
+                    <label for="name${i}">Stock Name:</label>
+                    <input type="text" id="name${i}" required>
+                    <label for="price${i}">Price ($):</label>
+                    <input type="number" id="price${i}" min="0" step="0.01" required>
+                    <label for="return${i}">Expected Return (%):</label>
+                    <input type="number" id="return${i}" min="0" max="100" step="0.01" required>
+                `;
+                stockInputsDiv.appendChild(stockDiv);
+            }
+
+            stockInputsDiv.style.display = 'block';
+            document.getElementById('budgetInput').style.display = 'block';
+        }
+
+        function optimizePortfolio() {
+            const stockNumber = parseInt(document.getElementById('stockNumber').value);
+            const stocks = [];
+            for (let i = 1; i <= stockNumber; i++) {
+                const name = document.getElementById(`name${i}`).value;
+                const price = parseFloat(document.getElementById(`price${i}`).value);
+                const expectedReturn = parseFloat(document.getElementById(`return${i}`).value) / 100;
+                if (name && !isNaN(price) && !isNaN(expectedReturn)) {
+                    stocks.push({ name, price, expectedReturn });
+                }
+            }
+
+            const budget = parseFloat(document.getElementById('budget').value);
+
+            if (stocks.length !== stockNumber || isNaN(budget)) {
+                alert('Please fill in all fields correctly.');
+                return;
+            }
+
+            const result = improvedOptimization(stocks, budget);
+            displayResult(result, budget);
+            displayChart(result, budget);
+        }
+
+        function improvedOptimization(stocks, budget) {
+            stocks.sort((a, b) => b.expectedReturn - a.expectedReturn);
+
+            const result = [];
+            let remainingBudget = budget;
+
+            for (const stock of stocks) {
+                if (remainingBudget >= stock.price) {
+                    const quantity = Math.floor(remainingBudget / stock.price);
+                    result.push({ stock, quantity });
+                    remainingBudget -= quantity * stock.price;
+                }
+            }
+
+            return result;
+        }
+
+        function displayResult(result, budget) {
+            let output = '<h2>Optimized Portfolio:</h2>';
+            let totalInvestment = 0;
+            let totalExpectedReturn = 0;
+
+            result.forEach(item => {
+                const investment = item.quantity * item.stock.price;
+                const expectedReturn = investment * item.stock.expectedReturn;
+                totalInvestment += investment;
+                totalExpectedReturn += expectedReturn;
+
+                output += `
+                    <p><strong>${item.stock.name}:</strong><br>
+                    Quantity: ${item.quantity}<br>
+                    Investment: $${investment.toFixed(2)}<br>
+                    Expected Return: $${expectedReturn.toFixed(2)} (${(item.stock.expectedReturn * 100).toFixed(2)}%)</p>
+                `;
+            });
+
+            output += `
+                <p><strong>Total Investment:</strong> $${totalInvestment.toFixed(2)}</p>
+                <p><strong>Total Expected Return:</strong> $${totalExpectedReturn.toFixed(2)} (${((totalExpectedReturn / totalInvestment) * 100).toFixed(2)}%)</p>
+                <p><strong>Unused Budget:</strong> $${(budget - totalInvestment).toFixed(2)}</p>
+            `;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = output;
+            resultDiv.style.animation = 'fadeIn 0.5s ease';
+        }
+
+        function displayChart(result, budget) {
+            let chartHtml = '<h3>Portfolio Allocation</h3>';
+            let totalInvestment = result.reduce((sum, item) => sum + item.quantity * item.stock.price, 0);
+
+            result.forEach(item => {
+                const investment = item.quantity * item.stock.price;
+                const percentage = (investment / totalInvestment) * 100;
+                chartHtml += `
+                    <div class="bar" style="width: ${percentage}%; animation: expand 0.5s ease;">
+                        ${item.stock.name}: ${percentage.toFixed(2)}%
+                    </div>
+                `;
+            });
+
+            const unusedPercentage = ((budget - totalInvestment) / budget) * 100;
+            if (unusedPercentage > 0) {
+                chartHtml += `
+                    <div class="bar" style="width: ${unusedPercentage}%; background-color: #7f8c8d; animation: expand 0.5s ease;">
+                        Unused: ${unusedPercentage.toFixed(2)}%
+                    </div>
+                `;
+            }
+
+            document.getElementById('chart').innerHTML = chartHtml;
+        }
+    </script>
+</body>
+</html>
